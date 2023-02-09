@@ -15,13 +15,13 @@
  */
 package org.apache.ibatis.datasource.pooled;
 
+import org.apache.ibatis.reflection.ExceptionUtil;
+
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.Connection;
 import java.sql.SQLException;
-
-import org.apache.ibatis.reflection.ExceptionUtil;
 
 /**
  * @author Clinton Begin
@@ -31,6 +31,9 @@ class PooledConnection implements InvocationHandler {
   private static final String CLOSE = "close";
   private static final Class<?>[] IFACES = new Class<?>[] { Connection.class };
 
+  /**
+   * 连接池的哈希
+   */
   private final int hashCode;
   private final PooledDataSource dataSource;
   private final Connection realConnection;
