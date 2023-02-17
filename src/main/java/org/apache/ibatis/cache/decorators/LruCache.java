@@ -15,11 +15,11 @@
  */
 package org.apache.ibatis.cache.decorators;
 
+import org.apache.ibatis.cache.Cache;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.locks.ReadWriteLock;
-
-import org.apache.ibatis.cache.Cache;
 
 /**
  * Lru (least recently used) cache decorator
@@ -28,6 +28,7 @@ import org.apache.ibatis.cache.Cache;
  */
 public class LruCache implements Cache {
 
+  //内置了一个hashMap
   private final Cache delegate;
   private Map<Object, Object> keyMap;
   private Object eldestKey;

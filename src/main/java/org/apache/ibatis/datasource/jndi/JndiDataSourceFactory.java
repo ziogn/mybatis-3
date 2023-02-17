@@ -15,16 +15,15 @@
  */
 package org.apache.ibatis.datasource.jndi;
 
-import java.util.Map.Entry;
-import java.util.Properties;
+import org.apache.ibatis.datasource.DataSourceException;
+import org.apache.ibatis.datasource.DataSourceFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
-
-import org.apache.ibatis.datasource.DataSourceException;
-import org.apache.ibatis.datasource.DataSourceFactory;
+import java.util.Map.Entry;
+import java.util.Properties;
 
 /**
  * @author Clinton Begin
@@ -37,6 +36,12 @@ public class JndiDataSourceFactory implements DataSourceFactory {
 
   private DataSource dataSource;
 
+  /**
+   * 设置属性
+   *
+   *
+   * @param properties 属性
+   */
   @Override
   public void setProperties(Properties properties) {
     try {
@@ -66,6 +71,13 @@ public class JndiDataSourceFactory implements DataSourceFactory {
     return dataSource;
   }
 
+  /**
+   * 获取env属性
+   *
+   * @param allProps 所有道具
+   *
+   * @return {@link Properties }
+   */
   private static Properties getEnvProperties(Properties allProps) {
     final String PREFIX = ENV_PREFIX;
     Properties contextProperties = null;

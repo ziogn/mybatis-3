@@ -15,15 +15,15 @@
  */
 package org.apache.ibatis.transaction.jdbc;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-import javax.sql.DataSource;
-
 import org.apache.ibatis.logging.Log;
 import org.apache.ibatis.logging.LogFactory;
 import org.apache.ibatis.session.TransactionIsolationLevel;
 import org.apache.ibatis.transaction.Transaction;
 import org.apache.ibatis.transaction.TransactionException;
+
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.SQLException;
 
 /**
  * {@link Transaction} that makes use of the JDBC commit and rollback facilities directly.
@@ -73,6 +73,10 @@ public class JdbcTransaction implements Transaction {
     }
   }
 
+
+  /**
+   * 回滚
+   */
   @Override
   public void rollback() throws SQLException {
     if (connection != null && !connection.getAutoCommit()) {
@@ -83,6 +87,9 @@ public class JdbcTransaction implements Transaction {
     }
   }
 
+  /**
+   * 关闭
+   */
   @Override
   public void close() throws SQLException {
     if (connection != null) {
@@ -94,6 +101,11 @@ public class JdbcTransaction implements Transaction {
     }
   }
 
+  /**
+   * 设置所需自动提交
+   *
+   * @param desiredAutoCommit 想要自动提交
+   */
   protected void setDesiredAutoCommit(boolean desiredAutoCommit) {
     try {
       if (connection.getAutoCommit() != desiredAutoCommit) {
@@ -111,6 +123,9 @@ public class JdbcTransaction implements Transaction {
     }
   }
 
+  /**
+   * 重置自动提交
+   */
   protected void resetAutoCommit() {
     try {
       if (!connection.getAutoCommit()) {
@@ -143,9 +158,14 @@ public class JdbcTransaction implements Transaction {
     setDesiredAutoCommit(autoCommmit);
   }
 
-  @Override
+    /**
+     * 获得超时时间
+     *
+     * @return {@link Integer }
+     */
+    @Override
   public Integer getTimeout() throws SQLException {
     return null;
   }
-  
+
 }
