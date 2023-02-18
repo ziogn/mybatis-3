@@ -16,10 +16,18 @@
 package org.apache.ibatis.session;
 
 /**
+ * 结果处理程序
+ *
  * @author Clinton Begin
+ * @date 2023/02/19
  */
 public interface ResultHandler<T> {
 
+  /**
+   * 处理结果
+   *
+   * @param resultContext 结果上下文
+   */
   void handleResult(ResultContext<? extends T> resultContext);
 
 }

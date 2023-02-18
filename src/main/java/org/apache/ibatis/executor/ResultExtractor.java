@@ -34,6 +34,14 @@ public class ResultExtractor {
     this.objectFactory = objectFactory;
   }
 
+  /**
+   * 从列表中提取对象
+   *
+   * @param list       列表
+   * @param targetType 目标类型
+   *
+   * @return {@link Object}
+   */
   public Object extractObjectFromList(List<Object> list, Class<?> targetType) {
     Object value = null;
     if (targetType != null && targetType.isAssignableFrom(list.getClass())) {

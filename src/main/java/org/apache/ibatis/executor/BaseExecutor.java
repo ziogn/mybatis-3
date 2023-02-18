@@ -41,7 +41,10 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import static org.apache.ibatis.executor.ExecutionPlaceholder.EXECUTION_PLACEHOLDER;
 
 /**
+ * 基地处理器
+ *
  * @author Clinton Begin
+ * @date 2023/02/19
  */
 public abstract class BaseExecutor implements Executor {
 
@@ -56,8 +59,17 @@ public abstract class BaseExecutor implements Executor {
   protected Configuration configuration;
 
   protected int queryStack;
+  /**
+   * sql连接关闭状态
+   */
   private boolean closed;
 
+  /**
+   * 基础执行器实例化
+   *
+   * @param configuration 配置
+   * @param transaction   事务
+   */
   protected BaseExecutor(Configuration configuration, Transaction transaction) {
     this.transaction = transaction;
     this.deferredLoads = new ConcurrentLinkedQueue<DeferredLoad>();
