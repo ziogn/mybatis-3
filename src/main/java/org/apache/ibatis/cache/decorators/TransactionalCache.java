@@ -40,16 +40,28 @@ public class TransactionalCache implements Cache {
 
   private static final Log log = LogFactory.getLog(TransactionalCache.class);
 
+  /**
+   * 委托
+   */
   private final Cache delegate;
+  /**
+   * 清楚提交
+   */
   private boolean clearOnCommit;
+  /**
+   * 在提交条目添加
+   */
   private final Map<Object, Object> entriesToAddOnCommit;
+  /**
+   * 在缓存条目错过
+   */
   private final Set<Object> entriesMissedInCache;
 
   public TransactionalCache(Cache delegate) {
     this.delegate = delegate;
     this.clearOnCommit = false;
-    this.entriesToAddOnCommit = new HashMap<Object, Object>();
-    this.entriesMissedInCache = new HashSet<Object>();
+    this.entriesToAddOnCommit = new HashMap<>();
+    this.entriesMissedInCache = new HashSet<>();
   }
 
   @Override

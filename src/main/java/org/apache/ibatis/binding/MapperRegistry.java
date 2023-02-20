@@ -27,13 +27,19 @@ import java.util.Map;
 import java.util.Set;
 
 /**
+ * 映射器注册
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
+ * @date 2023/02/19
  */
 public class MapperRegistry {
 
   private final Configuration config;
+  /**
+   * 已知映射器
+   */
   private final Map<Class<?>, MapperProxyFactory<?>> knownMappers = new HashMap<Class<?>, MapperProxyFactory<?>>();
 
   public MapperRegistry(Configuration config) {
@@ -52,11 +58,23 @@ public class MapperRegistry {
       throw new BindingException("Error getting mapper instance. Cause: " + e, e);
     }
   }
-  
+
+  /**
+   * 判断是否有映射器
+   *
+   * @param type 类型
+   *
+   * @return boolean
+   */
   public <T> boolean hasMapper(Class<T> type) {
     return knownMappers.containsKey(type);
   }
 
+  /**
+   * 添加映射器
+   *
+   * @param type 类型
+   */
   public <T> void addMapper(Class<T> type) {
     if (type.isInterface()) {
       if (hasMapper(type)) {
