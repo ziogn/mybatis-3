@@ -15,6 +15,10 @@
  */
 package org.apache.ibatis.binding;
 
+import org.apache.ibatis.lang.UsesJava7;
+import org.apache.ibatis.reflection.ExceptionUtil;
+import org.apache.ibatis.session.SqlSession;
+
 import java.io.Serializable;
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Constructor;
@@ -22,10 +26,6 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.util.Map;
-
-import org.apache.ibatis.lang.UsesJava7;
-import org.apache.ibatis.reflection.ExceptionUtil;
-import org.apache.ibatis.session.SqlSession;
 
 /**
  * @author Clinton Begin
@@ -44,6 +44,17 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     this.methodCache = methodCache;
   }
 
+  /**
+   * 调用
+   *
+   * @param proxy  代理
+   * @param method 方法
+   * @param args   参数
+   *
+   * @return {@link Object}
+   *
+   * @throws Throwable throwable
+   */
   @Override
   public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
     try {
@@ -59,6 +70,13 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     return mapperMethod.execute(sqlSession, args);
   }
 
+  /**
+   * 缓存映射方法
+   *
+   * @param method 方法
+   *
+   * @return {@link MapperMethod}
+   */
   private MapperMethod cachedMapperMethod(Method method) {
     MapperMethod mapperMethod = methodCache.get(method);
     if (mapperMethod == null) {
@@ -68,6 +86,17 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
     return mapperMethod;
   }
 
+  /**
+   * 调用默认方法
+   *
+   * @param proxy  代理
+   * @param method 方法
+   * @param args   arg游戏
+   *
+   * @return {@link Object}
+   *
+   * @throws Throwable throwable
+   */
   @UsesJava7
   private Object invokeDefaultMethod(Object proxy, Method method, Object[] args)
       throws Throwable {
@@ -85,7 +114,12 @@ public class MapperProxy<T> implements InvocationHandler, Serializable {
   }
 
   /**
+   * <p>是否默认方法</p>
    * Backport of java.lang.reflect.Method#isDefault()
+   *
+   * @param method 方法
+   *
+   * @return boolean
    */
   private boolean isDefaultMethod(Method method) {
     return (method.getModifiers()

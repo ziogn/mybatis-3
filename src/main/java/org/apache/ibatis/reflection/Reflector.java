@@ -284,6 +284,11 @@ public class Reflector {
     return result;
   }
 
+  /**
+   * 添加字段
+   *
+   * @param clazz clazz
+   */
   private void addFields(Class<?> clazz) {
     Field[] fields = clazz.getDeclaredFields();
     for (Field field : fields) {

@@ -1,17 +1,17 @@
 /**
- *    Copyright 2009-2016 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2016 the original author or authors.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.transaction;
 
@@ -19,11 +19,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 /**
- * 事务
  * Wraps a database connection.
  * Handles the connection lifecycle that comprises: its creation, preparation, commit/rollback and close.
  * <p>
- * 包装数据库连接，处理连接生命周期：创建、准备、提交/回滚和关闭
+ * <p>
+ * <h3>事务</h3>
+ * <text>包装数据库连接，处理连接生命周期：创建、准备、提交/回滚和关闭</text>
+ * </p>
  *
  * @author Clinton Begin
  * @date 2023/02/19
@@ -31,9 +33,9 @@ import java.sql.SQLException;
 public interface Transaction {
 
   /**
-   * 获得连接
    * Retrieve inner database connection<br/>
-   * 获取内部数据库连接
+   * <h3>获得连接</h3>
+   * <text>获取内部数据库连接</text>
    *
    * @return DataBase connection
    *
@@ -42,9 +44,11 @@ public interface Transaction {
   Connection getConnection() throws SQLException;
 
   /**
-   * 提交
    * Commit inner database connection.<br/>
-   * 提交内部数据库连接
+   * <p>
+   * <h3>提交</h3>
+   * <text>提交内部数据库连接</text>
+   * </p>
    *
    * @throws SQLException sqlexception异常
    */
@@ -78,5 +82,5 @@ public interface Transaction {
    * @throws SQLException sqlexception异常
    */
   Integer getTimeout() throws SQLException;
-  
+
 }

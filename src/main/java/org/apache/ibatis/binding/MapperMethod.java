@@ -36,9 +36,12 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 /**
+ * 映射方法
+ *
  * @author Clinton Begin
  * @author Eduardo Macarron
  * @author Lasse Voss
+ * @date 2023/02/21
  */
 public class MapperMethod {
 
@@ -243,6 +246,16 @@ public class MapperMethod {
       return type;
     }
 
+    /**
+     * 解析映射语句
+     *
+     * @param mapperInterface 映射器接口
+     * @param methodName      方法名称
+     * @param declaringClass  声明类
+     * @param configuration   配置
+     *
+     * @return {@link MappedStatement}
+     */
     private MappedStatement resolveMappedStatement(Class<?> mapperInterface, String methodName,
         Class<?> declaringClass, Configuration configuration) {
       String statementId = mapperInterface.getName() + "." + methodName;

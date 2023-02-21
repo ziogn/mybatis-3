@@ -18,7 +18,10 @@ package org.apache.ibatis.reflection.property;
 import java.util.Iterator;
 
 /**
+ * 属性分词器
+ *
  * @author Clinton Begin
+ * @date 2023/02/21
  */
 public class PropertyTokenizer implements Iterator<PropertyTokenizer> {
   private String name;
