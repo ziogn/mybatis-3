@@ -1,36 +1,19 @@
 /**
- *    Copyright 2009-2018 the original author or authors.
- *
- *    Licensed under the Apache License, Version 2.0 (the "License");
- *    you may not use this file except in compliance with the License.
- *    You may obtain a copy of the License at
- *
- *       http://www.apache.org/licenses/LICENSE-2.0
- *
- *    Unless required by applicable law or agreed to in writing, software
- *    distributed under the License is distributed on an "AS IS" BASIS,
- *    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *    See the License for the specific language governing permissions and
- *    limitations under the License.
+ * Copyright 2009-2018 the original author or authors.
+ * <p>
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
 package org.apache.ibatis.reflection;
-
-import java.lang.reflect.Array;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.GenericArrayType;
-import java.lang.reflect.Method;
-import java.lang.reflect.Modifier;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.ReflectPermission;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Map.Entry;
 
 import org.apache.ibatis.reflection.invoker.GetFieldInvoker;
 import org.apache.ibatis.reflection.invoker.Invoker;
@@ -38,9 +21,20 @@ import org.apache.ibatis.reflection.invoker.MethodInvoker;
 import org.apache.ibatis.reflection.invoker.SetFieldInvoker;
 import org.apache.ibatis.reflection.property.PropertyNamer;
 
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.Map.Entry;
+
 /**
  * This class represents a cached set of class definition information that
  * allows for easy mapping between property names and getter/setter methods.
+ *
+ * <p>
+ * <h3>中文注释:</h3>
+ * <text>
+ * 当前类装载着类反射得到的定义信息，比如所属类类型，类名称，getter/setter方法，可读/可写的属性名称等属性
+ * </text>
+ * </p>
  *
  * @author Clinton Begin
  */
@@ -73,6 +67,13 @@ public class Reflector {
     }
   }
 
+  /**
+   * 添加默认构造函数
+   *
+   * @param clazz clazz
+   *
+   * @implNote 通过类反射获得当前类所拥有的所有构造函数，当遍历构造函数获取到无参构造且可访问时，设置到默认构造器字段{@link #defaultConstructor}
+   */
   private void addDefaultConstructor(Class<?> clazz) {
     Constructor<?>[] consts = clazz.getDeclaredConstructors();
     for (Constructor<?> constructor : consts) {
@@ -91,6 +92,20 @@ public class Reflector {
     }
   }
 
+  /**
+   * 添加类的get函数
+   *
+   * @param cls 目标反射类
+   *
+   * @implNote <ol>
+   * <li>获取当前类的所有以'get'或者'is'为前缀且长度超过前缀长度并为空参的函数</li>
+   * <li>将函数名称转换为小驼峰的属性名称，并作为map临时存储的key，<br/>
+   * 由于可能有相同的属性名称（如 isDeletedFlag()，getDeletedFlag()函数，转换过来都是名字为deletedFlag的属性名称），<br/>
+   * 所有将冲突的函数合并为一个集合作为map临时存储的value
+   * </li>
+   * <li>{@link #resolveGetterConflicts(Map)}解决属性冲突的问题</li>
+   * </ol>
+   */
   private void addGetMethods(Class<?> cls) {
     Map<String, List<Method>> conflictingGetters = new HashMap<String, List<Method>>();
     Method[] methods = getClassMethods(cls);
@@ -108,6 +123,18 @@ public class Reflector {
     resolveGetterConflicts(conflictingGetters);
   }
 
+  /**
+   * 解决getter/is函数转属性名称冲突的函数，并获取其中一个函数
+   * @implNote <ol>获取策略
+   * <li>通过遍历函数两两比较</li>
+   * <li>获取方法的返回值，并判断返回值是否相同，当返回值相同且返回值类型不为{@code boolean}，则表明违反了JavaBeans规范并可能导致不可预知的结果，将抛出{@link ReflectionException}</li>
+   * <li>当函数名以'is'为前缀，则优先此函数</li>
+   * <li>如果前一个函数的返回值是后一个函数返回值的超类或者其接口，则优先后一个函数</li>
+   * <li>最后调用{@link #addGetMethod(String, Method)}对当前属性进行赋值</li>
+   * </ol>
+   *
+   * @param conflictingGetters 冲突的函数
+   */
   private void resolveGetterConflicts(Map<String, List<Method>> conflictingGetters) {
     for (Entry<String, List<Method>> entry : conflictingGetters.entrySet()) {
       Method winner = null;
@@ -143,6 +170,12 @@ public class Reflector {
     }
   }
 
+  /**
+   * 添加get方法
+   *
+   * @param name   名字
+   * @param method 方法
+   */
   private void addGetMethod(String name, Method method) {
     if (isValidPropertyName(name)) {
       getMethods.put(name, new MethodInvoker(method));
@@ -372,6 +405,13 @@ public class Reflector {
     return sb.toString();
   }
 
+  /**
+   * 可以访问私有方法
+   *
+   * @return boolean
+   *
+   * @implNote 通过 {@link System#getSecurityManager()}检查访问权限{@link ReflectPermission}("suppressAccessChecks")
+   */
   private static boolean canAccessPrivateMethods() {
     try {
       SecurityManager securityManager = System.getSecurityManager();

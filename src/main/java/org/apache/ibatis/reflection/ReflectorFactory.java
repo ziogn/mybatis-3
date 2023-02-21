@@ -15,6 +15,13 @@
  */
 package org.apache.ibatis.reflection;
 
+/**
+ * 反射器工厂
+ * @implNote 它的主要目的 生成反射器以及判断是否相关缓存
+ *
+ * @author ziong
+ * @date 2023/02/20
+ */
 public interface ReflectorFactory {
 
   boolean isClassCacheEnabled();
